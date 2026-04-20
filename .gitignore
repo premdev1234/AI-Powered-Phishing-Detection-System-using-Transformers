@@ -1,0 +1,62 @@
+# ======================
+# Python / Flask Project
+# ======================
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment folders
+venv/
+env/
+ENV/
+.venv/
+
+
+# Model artifacts (large)
+model/
+*.pt
+*.npy
+*.pkl
+*.bin
+*.h5
+*.zip
+
+# Datasets (optional)
+dataset/
+data/
+*.csv
+*.json
+
+# Logs and checkpoints
+logs/
+*.log
+*.out
+*.err
+checkpoint/
+runs/
+
+# Jupyter / Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# OS / IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Build & Distribution
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Cache / temp files
+*.tmp
+*.bak
+*.old
+*.orig
+*.cache

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PhishGuard – Email Phishing Detection System</title>
+  <meta name="description" content="PhishGuard – AI and Deep Learning-Based Email Phishing Detection System using GloVe BiLSTM, Word2Vec BiLSTM, and DistilBERT models." />
+
+  <!-- Tailwind & Papaparse -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <style>
+    /* ---------- THEME ---------- */
+    body {
+      background: linear-gradient(135deg, #f9fafb, #f0f7ff);
+      color: #1e293b;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .accent {
+      color: #00bfa6;
+    }
+
+    .primary {
+      background: linear-gradient(90deg, #00b4d8, #4361ee);
+      color: white;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .primary:hover {
+      background: linear-gradient(90deg, #0096c7, #3730a3);
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+    }
+
+    .badge-phish {
+      background: #ff3b3b;
+      color: #fff;
+      box-shadow: 0 0 6px rgba(255, 59, 59, 0.3);
+    }
+
+    .badge-safe {
+      background: #22c55e;
+      color: #fff;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.3);
+    }
+
+    .token {
+      background: rgba(255, 196, 0, 0.18);
+      border-radius: 4px;
+      padding: 0 0.15rem;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e293b;
+      border-left: 5px solid #00b4d8;
+      padding-left: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tab {
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: #334155;
+      background: #f8fafc;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      background: #e0f7fa;
+    }
+
+    .tab-active {
+      background: linear-gradient(90deg, #00b4d8, #4361ee);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
+    }
+
+    input,
+    textarea {
+      background: #f9fafb;
+      border: 1px solid #dbeafe;
+      transition: border 0.15s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #00b4d8;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2);
+    }
+
+    table thead {
+      background: #e0f2fe;
+      color: #1e3a8a;
+    }
+
+    table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    footer {
+      background: #f8fafc;
+      color: #475569;
+      border-top: 1px solid #e2e8f0;
+      padding: 12px 0;
+    }
+
+    
+  </style>
+</head>
+
+<body class="bg-gray-50 text-slate-900 font-sans min-h-screen">
+
+  <!-- HEADER -->
+  <header class="border-b border-gray-200 sticky top-0 z-40" style="background:#e0f7fa;">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">PhishGuard</h1>
+        <p class="text-sm text-slate-600 mt-0.5">AI and Deep Learning-Based Phishing Email Detection System</p>
+      </div>
+      <div class="text-right text-sm text-slate-700">
+        <div><b>Student:</b> Lalita Dev</div>
+        <div><b>Enrollment No.:</b> 2400171188</div>
+        <div class="mt-1"><b>Programme:</b> MSc (Information Security – MSCIS)</div>
+        <div class="mt-1"><b>Course:</b> MSEP - 028</div>
+        <div class="mt-1">
+          <a href="https://github.com/devlata1998" target="_blank" class="text-indigo-600 hover:underline">GitHub Repository</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+
+    <!-- OVERVIEW -->
+    <section class="p-4 rounded-2xl card">
+      <h2 class="section-title">🎯 Project Overview</h2>
+      <p class="text-slate-700 text-sm leading-relaxed">
+        This project implements an <b>Email Phishing Detection System</b> powered by an ensemble of three deep learning models:
+        <b>GloVe BiLSTM</b>, <b>Word2Vec BiLSTM</b>, and <b>DistilBERT</b>.
+        It supports both single-email prediction and bulk CSV-based evaluation for large-scale dataset analysis.
+        The ensemble intelligently combines individual model probabilities through weighted aggregation to produce a more robust and accurate final decision.
+      </p>
+    </section>
+
+    <!-- TABS -->
+    <div class="flex gap-3">
+      <div id="tab-single" class="tab tab-active rounded-md text-sm">Single Email</div>
+      <div id="tab-batch" class="tab rounded-md text-sm">Batch CSV</div>
+    </div>
+
+    <!-- PANELS -->
+    <section id="tabs-content" class="space-y-6">
+      <!-- SINGLE EMAIL -->
+      <div id="panel-single" class="p-5 rounded-2xl card">
+        <h3 class="section-title">📩 Single Email Check</h3>
+        <div class="space-y-3">
+          <input id="senderInput" class="w-full p-3 rounded border border-gray-200" placeholder="Sender (e.g. security@bank.com)" />
+          <input id="subjectInput" class="w-full p-3 rounded border border-gray-200" placeholder="Subject" />
+          <textarea id="bodyInput" rows="6" class="w-full p-3 rounded border border-gray-200" placeholder="Body of the email"></textarea>
+          <div class="flex items-center gap-3">
+            <button id="predictBtn" class="px-4 py-2 rounded primary font-semibold">Predict</button>
+            <button id="explainBtn" class="px-3 py-2 rounded border border-gray-200">Highlight</button>
+            <div class="ml-auto flex items-center gap-3">
+              <label class="text-sm text-slate-600">Threshold</label>
+              <input id="thresholdSlider" type="range" min="0" max="100" value="70" class="h-1" />
+              <div id="thresholdVal" class="text-sm w-12 text-right">0.70</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREDICTION CARD -->
+      <div id="predictionCard" class="hidden p-5 rounded-2xl card">
+        <div class="flex items-start gap-4">
+          <div class="w-36 h-36 flex items-center justify-center bg-gray-100 rounded-full">
+            <div class="text-center">
+              <div id="finalLabel" class="text-lg font-semibold">NOT PHISHING</div>
+              <div id="weightedPerc" class="text-2xl font-bold accent">0%</div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              <div class="p-3 rounded border text-center bg-gray-50">
+                <div class="text-xs text-slate-500">GloVe</div>
+                <div id="probGlove" class="text-lg font-semibold">0.00</div>
+              </div>
+              <div class="p-3 rounded border text-center bg-gray-50">
+                <div class="text-xs text-slate-500">Word2Vec</div>
+                <div id="probW2V" class="text-lg font-semibold">0.00</div>
+              </div>
+              <div class="p-3 rounded border text-center bg-gray-50">
+                <div class="text-xs text-slate-500">DistilBERT</div>
+                <div id="probDistil" class="text-lg font-semibold">0.00</div>
+              </div>
+            </div>
+            <div class="text-sm text-slate-700">Explanation — suspicious tokens</div>
+            <div id="explainHtml" class="mt-2 p-3 rounded border bg-gray-50 text-sm"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BATCH PANEL -->
+      <div id="panel-batch" class="hidden p-5 rounded-2xl card">
+        <h3 class="section-title">📊 Batch CSV Evaluation</h3>
+        <div class="grid md:grid-cols-[80%_20%] grid-cols-1 gap-6">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <input id="csvFile" type="file" accept=".csv" class="text-sm" />
+              <button id="runBatch" class="px-3 py-2 rounded primary font-semibold">Run Batch</button>
+              <div class="ml-auto text-sm text-slate-600">CSV: sender, subject, body, label</div>
+            </div>
+            <div id="batchProgress" class="mt-2 text-sm text-slate-600">No batch running.</div>
+            <div class="overflow-auto max-h-96 border rounded bg-white">
+              <table id="resultsTable" class="w-full text-sm table-auto">
+                <thead class="text-slate-600 text-xs bg-gray-50 sticky top-0">
+                  <tr>
+                    <th class="p-2">#</th>
+                    <th>Sender</th>
+                    <th>Subject</th>
+                    <th>Weighted%</th>
+                    <th>Final</th>
+                    <th>True</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <aside>
+            <div class="p-5 rounded-2xl border bg-gray-50 h-fit">
+              <h3 class="section-title">📈 Batch Metrics</h3>
+              <div class="grid grid-cols-1 gap-2 mt-3 text-sm text-slate-700">
+                <div class="p-2 rounded border">Accuracy: <span id="metricAcc">-</span></div>
+                <div class="p-2 rounded border">Precision: <span id="metricPrec">-</span></div>
+                <div class="p-2 rounded border">Recall: <span id="metricRec">-</span></div>
+                <div class="p-2 rounded border">F1 Score: <span id="metricF1">-</span></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODEL CARD -->
+    <section class="p-5 rounded-2xl card">
+      <h3 class="section-title">🧠 Model Card</h3>
+      <ul class="text-slate-700 text-sm mt-2 space-y-2 list-disc list-inside">
+        <li><b>GloVe BiLSTM</b> — pretrained embeddings + BiLSTM for lexical patterns</li>
+        <li><b>Word2Vec BiLSTM</b> — custom embeddings + BiLSTM for contextual patterns</li>
+        <li><b>DistilBERT</b> — transformer fine-tuned on phishing corpus</li>
+        <li><b>Ensemble</b> — weighted voting (GloVe 0.2 · W2V 0.3 · DistilBERT 0.5)</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="text-sm text-center text-slate-600">
+    <div>Developed by <b>Lalita Dev</b> | Enrollment No.: <b>2400171188</b> | MSc (Information Security – MSCIS)</div>
+  </footer>
+
+  <script>
+  // -------- Utility helpers --------
+  const el = id => document.getElementById(id);
+  const escapeHtml = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" })[c]);
+  const defaultWeights = [0.2, 0.3, 0.5];
+
+  // DOM refs (may be null if element missing)
+  const tabSingle = el('tab-single'), tabBatch = el('tab-batch');
+  const panelSingle = el('panel-single'), panelBatch = el('panel-batch');
+  const predictBtn = el('predictBtn'), explainBtn = el('explainBtn'), runBatch = el('runBatch');
+  const probGlove = el('probGlove'), probW2V = el('probW2V'), probDistil = el('probDistil');
+  const weightedPerc = el('weightedPerc'), finalLabel = el('finalLabel');
+  const predictionCard = el('predictionCard'), explainHtml = el('explainHtml');
+  const csvFile = el('csvFile'), resultsBody = el('resultsBody'), batchProgress = el('batchProgress');
+  const metricAcc = el('metricAcc'), metricPrec = el('metricPrec'), metricRec = el('metricRec'), metricF1 = el('metricF1');
+  const thresholdSlider = el('thresholdSlider'), thresholdVal = el('thresholdVal');
+  const senderInput = el('senderInput'), subjectInput = el('subjectInput'), bodyInput = el('bodyInput');
+
+  // Safe DOM write helper
+  function safeSetText(id, text) {
+    const eln = document.getElementById(id);
+    if (eln) eln.innerText = text;
+  }
+
+  // Tabs (hide prediction card when switching)
+  if (tabSingle && tabBatch && panelSingle && panelBatch) {
+    tabSingle.onclick = () => {
+      tabSingle.classList.add('tab-active');
+      tabBatch.classList.remove('tab-active');
+      panelSingle.classList.remove('hidden');
+      panelBatch.classList.add('hidden');
+      if (predictionCard) predictionCard.classList.add('hidden');
+    };
+    tabBatch.onclick = () => {
+      tabBatch.classList.add('tab-active');
+      tabSingle.classList.remove('tab-active');
+      panelBatch.classList.remove('hidden');
+      panelSingle.classList.add('hidden');
+      if (predictionCard) predictionCard.classList.add('hidden');
+    };
+  }
+
+  // Threshold slider
+  if (thresholdSlider && thresholdVal) {
+    thresholdSlider.oninput = () => thresholdVal.innerText = (Number(thresholdSlider.value) / 100).toFixed(2);
+  }
+
+  // Backend URL display (safe: only if element exists)
+  window.addEventListener('DOMContentLoaded', () => {
+    const backendEl = el('backendUrlCode');
+    if (backendEl) backendEl.innerText = window.location.origin;
+    if (thresholdSlider) thresholdSlider.dispatchEvent(new Event('input'));
+    if (tabSingle) tabSingle.click();
+  });
+
+  // API helper
+  async function callPredictAPI(sender, subject, body, weights) {
+    const payload = { sender, subject, body, weights };
+    const res = await fetch('/predict', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(()=>`HTTP ${res.status}`);
+      throw new Error(`Server ${res.status}: ${text}`);
+    }
+    return await res.json();
+  }
+
+  // Show prediction (single email)
+  function showPrediction(resp) {
+    if (!predictionCard) return;
+    predictionCard.classList.remove('hidden');
+    const pg = +resp.prob_glove || 0, pw = +resp.prob_word2vec || 0, pd = +resp.prob_distilbert || 0, wp = +resp.weighted_prob || 0;
+    if (probGlove) probGlove.innerText = pg.toFixed(2);
+    if (probW2V) probW2V.innerText = pw.toFixed(2);
+    if (probDistil) probDistil.innerText = pd.toFixed(2);
+    if (weightedPerc) weightedPerc.innerText = Math.round(wp * 100) + '%';
+    if (finalLabel) {
+      if (wp >= + (thresholdVal ? thresholdVal.innerText : 0.7)) {
+        finalLabel.innerText = 'PHISHING';
+        finalLabel.className = 'text-lg font-semibold badge-phish px-2 py-1 rounded';
+      } else {
+        finalLabel.innerText = 'NOT PHISHING';
+        finalLabel.className = 'text-lg font-semibold badge-safe px-2 py-1 rounded';
+      }
+    }
+    if (explainHtml) explainHtml.innerHTML = resp.explain_html || '—';
+  }
+
+  // Single predict button (keeps as-is)
+  if (predictBtn) {
+    predictBtn.onclick = async () => {
+      try {
+        predictBtn.disabled = true; predictBtn.innerText = 'Predicting...';
+        const resp = await callPredictAPI((senderInput||{value:''}).value.trim(), (subjectInput||{value:''}).value.trim(), (bodyInput||{value:''}).value.trim(), normalizeWeights(defaultWeights));
+        showPrediction(resp);
+      } catch (e) {
+        alert('Prediction error: ' + (e.message || e));
+        console.error(e);
+      } finally {
+        predictBtn.disabled = false; predictBtn.innerText = 'Predict';
+      }
+    };
+  }
+
+  // Highlight suspicious tokens (single)
+  if (explainBtn) {
+    explainBtn.onclick = () => {
+      const text = (bodyInput||{value:''}).value || '';
+      const suspicious = ['click', 'verify', 'login', 'account', 'urgent', 'http', 'password', 'bank', 'confirm', 'free', 'claim'];
+      if (explainHtml) {
+        explainHtml.innerHTML = text.split(/(\s+)/).map(t => suspicious.some(s => t.toLowerCase().includes(s)) ? `<span class="token" style="background:rgba(239,68,68,0.12)">${escapeHtml(t)}</span>` : escapeHtml(t)).join('');
+      }
+    };
+  }
+
+  // Normalize weights
+  function normalizeWeights(w = defaultWeights) {
+    let [a, b, c] = w.map(Number); let s = a + b + c; if (!s || s <= 0) { a = b = c = 1; s = 3; }
+    return [a / s, b / s, c / s];
+  }
+
+  // --- CSV label normalization helper ---
+  function normalizeLabel(x) {
+    if (x === null || x === undefined) return null;
+    const s = String(x).trim().toLowerCase();
+    const pos = ['1', 'phishing', 'phish', 'spam', 'true', 'yes', 'y'];
+    const neg = ['0', 'not_phishing', 'not phishing', 'not-spam', 'not spam', 'ham', 'legit', 'false', 'no', 'n'];
+    if (pos.includes(s)) return 'phishing';
+    if (neg.includes(s)) return 'not_phishing';
+    if (!Number.isNaN(Number(s))) {
+      const n = Number(s);
+      if (n === 1) return 'phishing';
+      if (n === 0) return 'not_phishing';
+    }
+    return null;
+  }
+
+  // --- Compute metrics from confusion counts ---
+  function computeMetrics(tp, tn, fp, fn) {
+    const total = tp + tn + fp + fn;
+    const accuracy = total > 0 ? (tp + tn) / total : 0;
+    const precision = (tp + fp) > 0 ? tp / (tp + fp) : 0;
+    const recall = (tp + fn) > 0 ? tp / (tp + fn) : 0;
+    const f1 = (precision + recall) > 0 ? 2 * precision * recall / (precision + recall) : 0;
+    return { accuracy, precision, recall, f1 };
+  }
+
+  // --- Run Batch handler (PapaParse + sequential API calls) ---
+  if (runBatch) {
+    runBatch.onclick = async () => {
+      const file = csvFile && csvFile.files && csvFile.files[0];
+      if (!file) return alert('Please select a CSV file first.');
+      // clear previous results
+      if (resultsBody) resultsBody.innerHTML = '';
+      if (batchProgress) batchProgress.innerText = 'Parsing CSV...';
+
+      runBatch.disabled = true;
+      runBatch.innerText = 'Processing...';
+
+      try {
+        Papa.parse(file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: async function (results) {
+            const rows = results.data || [];
+            if (batchProgress) batchProgress.innerText = `Processing ${rows.length} rows...`;
+            // confusion counts
+            let tp = 0, tn = 0, fp = 0, fn = 0, labelledCount = 0;
+
+            for (let i = 0; i < rows.length; ++i) {
+              const r = rows[i] || {};
+              const sender = (r.sender || r.from || r.email || '').trim();
+              const subject = (r.subject || '').trim();
+              const body = (r.body || '').trim();
+              const rawLabel = (r.label !== undefined && r.label !== null && String(r.label).trim() !== '') ? r.label : (r.Label !== undefined ? r.Label : null);
+              const trueLabel = normalizeLabel(rawLabel);
+
+              try {
+                // call backend
+                const weights = normalizeWeights(defaultWeights);
+                const resp = await callPredictAPI(sender, subject, body, weights);
+                const weighted = Number(resp.weighted_prob ?? 0);
+                const final = (weighted >= + (thresholdVal ? thresholdVal.innerText : 0.7)) ? 'phishing' : 'not_phishing';
+
+                // append table row
+                if (resultsBody) {
+                  const tr = document.createElement('tr');
+                  tr.innerHTML = `<td class="p-2">${i+1}</td><td class="p-2">${escapeHtml(sender)}</td><td class="p-2">${escapeHtml(subject)}</td><td class="p-2">${(weighted*100).toFixed(1)}%</td><td class="p-2">${final}</td><td class="p-2">${trueLabel ?? '-'}</td>`;
+                  resultsBody.appendChild(tr);
+                }
+
+                // update counts
+                if (trueLabel !== null) {
+                  labelledCount++;
+                  if (trueLabel === 'phishing' && final === 'phishing') tp++;
+                  else if (trueLabel === 'not_phishing' && final === 'not_phishing') tn++;
+                  else if (trueLabel === 'not_phishing' && final === 'phishing') fp++;
+                  else if (trueLabel === 'phishing' && final === 'not_phishing') fn++;
+                }
+              } catch (errRow) {
+                console.error('Error processing row', i, errRow);
+                if (resultsBody) {
+                  const tr = document.createElement('tr');
+                  tr.innerHTML = `<td class="p-2">${i+1}</td><td class="p-2" colspan="5">Error: ${escapeHtml(errRow.message || String(errRow))}</td>`;
+                  resultsBody.appendChild(tr);
+                }
+              }
+            } // for
+
+            // compute and show metrics
+            if (labelledCount > 0) {
+              const m = computeMetrics(tp, tn, fp, fn);
+              if (metricAcc) metricAcc.innerText = m.accuracy.toFixed(2);
+              if (metricPrec) metricPrec.innerText = m.precision.toFixed(2);
+              if (metricRec) metricRec.innerText = m.recall.toFixed(2);
+              if (metricF1) metricF1.innerText = m.f1.toFixed(2);
+            } else {
+              if (metricAcc) metricAcc.innerText = '-';
+              if (metricPrec) metricPrec.innerText = '-';
+              if (metricRec) metricRec.innerText = '-';
+              if (metricF1) metricF1.innerText = '-';
+            }
+
+            if (batchProgress) batchProgress.innerText = 'Batch done.';
+            runBatch.disabled = false;
+            runBatch.innerText = 'Run Batch';
+          },
+          error: function (err) {
+            console.error('PapaParse error', err);
+            if (batchProgress) batchProgress.innerText = 'CSV parse error';
+            runBatch.disabled = false;
+            runBatch.innerText = 'Run Batch';
+            alert('CSV parse error: ' + (err.message || err));
+          }
+        });
+      } catch (e) {
+        console.error(e);
+        if (batchProgress) batchProgress.innerText = 'Batch failed';
+        runBatch.disabled = false;
+        runBatch.innerText = 'Run Batch';
+        alert('Batch processing failed: ' + (e.message || e));
+      }
+    };
+  }
+
+</script>
+
+</body>
+
+</html>
