@@ -1,205 +1,179 @@
-# 🚀 AI-Powered Phishing Detection System using Transformers
 
-## 🔍 Overview
 
-A **production-ready AI system** for detecting phishing emails using **deep learning and transformer-based NLP models**.
+AI-Powered Phishing Detection System using Transformers
 
-This system integrates:
+Overview
+This is a production-ready AI system designed to detect phishing emails using deep learning and transformer-based NLP models. The system combines BiLSTM models (with GloVe and Word2Vec embeddings) and a DistilBERT transformer using a weighted ensemble approach to achieve high accuracy, robustness, and real-time inference.
 
-* **BiLSTM (GloVe + Word2Vec embeddings)**
-* **DistilBERT Transformer**
-* **Weighted Ensemble Learning**
-
-to deliver **high accuracy, robustness, and real-time inference**.
-
-👉 Built with a focus on **real-world deployment, security applications, and scalable AI systems**
+It is built with a focus on real-world deployment, cybersecurity applications, and scalable AI systems.
 
 ---
 
-## 🎯 Problem Statement
+Problem Statement
+Traditional email filtering systems struggle to detect modern phishing attacks. These attacks often involve obfuscated content, context-aware manipulation, and zero-day threats that bypass rule-based systems.
 
-Traditional email filters fail against:
-
-* Obfuscated phishing content
-* Context-aware attacks
-* Zero-day threats
-
-This system solves it using **context-aware AI models** that understand **semantic + linguistic patterns**, not just keywords.
+This system solves the problem using context-aware AI models that understand semantic and linguistic patterns rather than relying on static keyword matching.
 
 ---
 
-## 🧠 Core Features
+Core Features
 
-* Transformer-based NLP (**DistilBERT**)
-* BiLSTM with **Word2Vec & GloVe embeddings**
-* Ensemble learning for improved performance
+* Transformer-based NLP using DistilBERT
+* BiLSTM models with Word2Vec and GloVe embeddings
+* Ensemble learning for improved accuracy and robustness
 * Real-time phishing detection
-* Batch email analysis (CSV support)
-* Web-based interface (Flask)
-* Threshold tuning (precision vs recall control)
-* Stateless architecture (no database dependency)
+* Batch email analysis using CSV input
+* Web-based interface built with Flask
+* Threshold tuning to balance precision and recall
+* Stateless architecture with no database dependency
 
 ---
 
-## 🏗️ System Architecture
-
-```
-Input Email
-   ↓
-Preprocessing (cleaning, masking, tokenization)
-   ↓
-Model Layer:
-   ├── GloVe BiLSTM
-   ├── Word2Vec BiLSTM
-   └── DistilBERT
-   ↓
-Weighted Ensemble
-   ↓
-Final Prediction (Phishing / Legitimate)
-```
+System Architecture
+Input email is first passed through a preprocessing pipeline where text cleaning, masking, and tokenization are applied.
+The processed data is then fed into three models: GloVe BiLSTM, Word2Vec BiLSTM, and DistilBERT.
+Outputs from these models are combined using a weighted ensemble to produce the final classification as phishing or legitimate.
 
 ---
 
-## ⚙️ Tech Stack
-
-* **Language:** Python
-* **Deep Learning:** PyTorch, Hugging Face Transformers
-* **NLP:** NLTK, Gensim
-* **Backend:** Flask
-* **Frontend:** HTML, CSS, JavaScript
-* **ML Tools:** Scikit-learn, Pandas, NumPy
+Tech Stack
+Programming Language: Python
+Deep Learning: PyTorch, Hugging Face Transformers
+NLP Tools: NLTK, Gensim
+Backend: Flask
+Frontend: HTML, CSS, JavaScript
+ML Tools: Scikit-learn, Pandas, NumPy
 
 ---
 
-## 📊 Model Details
+Model Details
+The system uses three complementary models:
 
-| Model           | Role                            |
-| --------------- | ------------------------------- |
-| GloVe BiLSTM    | Captures lexical patterns       |
-| Word2Vec BiLSTM | Learns dataset-specific context |
-| DistilBERT      | Deep contextual understanding   |
+GloVe BiLSTM captures lexical patterns and word-level relationships.
+Word2Vec BiLSTM learns dataset-specific contextual information.
+DistilBERT provides deep contextual understanding with efficient inference.
 
-### Ensemble Formula
-
-```
+Final prediction is computed using a weighted ensemble:
 P_final = 0.2 * P_glove + 0.3 * P_w2v + 0.5 * P_distilbert
-```
 
-👉 Improves generalization and reduces false negatives
-
----
-
-## 📈 Evaluation Metrics
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* ROC-AUC
-* Confusion Matrix
-
-👉 Focus: **minimizing false negatives (critical for security systems)**
+This improves generalization and significantly reduces false negatives.
 
 ---
 
-## ⚙️ Installation
+Evaluation Metrics
+The system is evaluated using standard classification metrics including Accuracy, Precision, Recall, F1-score, ROC-AUC, and Confusion Matrix.
 
-```bash
-git clone https://github.com/premdev1234/AI-Powered-Phishing-Detection-System-using-Transformers.git
+Special focus is given to minimizing false negatives, which is critical in cybersecurity applications.
+
+---
+
+Installation
+Clone the repository and install dependencies:
+
+git clone [https://github.com/premdev1234/AI-Powered-Phishing-Detection-System-using-Transformers.git](https://github.com/premdev1234/AI-Powered-Phishing-Detection-System-using-Transformers.git)
 cd AI-Powered-Phishing-Detection-System-using-Transformers
-
 pip install -r requirements.txt
-```
 
 ---
 
-## ▶️ Run the Project
+Run the Project
+Execute the following command:
 
-```bash
 python run.py
-```
 
-Open in browser:
-
-```
-http://localhost:5000
-```
+Then open your browser and go to:
+[http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 📂 Project Structure
+API Endpoints
 
-```
-.
-├── app.py
-├── backend.py
-├── evaluation_model.py
-├── run.py
-├── frontend.html
-├── test_csv_data.csv
-├── requirements.txt
-├── render.yaml
-└── README.md
-```
+POST /predict
+Used to classify a single email
 
-👉 Note: Current structure is **flat for simplicity**, can be modularized into backend/frontend later.
+Request:
+text: "Your email content here"
+
+Response:
+prediction: phishing or legitimate
+confidence: probability score
+
+POST /batch_predict
+Used for bulk classification via CSV input
 
 ---
 
-## ⚠️ Model Files
+Project Structure
 
-Large model files are not included due to GitHub limits.
+app.py
+backend.py
+evaluation_model.py
+run.py
+frontend.html
+test_csv_data.csv
+requirements.txt
+render.yaml
+README.md
 
-👉 Download from:
-
-```
-(Add your Google Drive / HuggingFace link here)
-```
-
-Place them in:
-
-```
-project_root/
-```
+Note: The current structure is flat for simplicity and can be modularized further into backend and frontend directories.
 
 ---
 
-## 🚀 Key Highlights
+Model Files
 
-* End-to-end AI pipeline (data → model → inference)
-* Real-time + batch processing support
-* Ensemble learning for robustness
-* Production-oriented design
-* Lightweight and deployment-ready
+Large model files are not included due to GitHub size limitations.
+
+Download them from your provided link and place them in the project root before running the system.
 
 ---
 
-## 🔮 Future Improvements
-
-* LLM-based phishing reasoning agents
-* Multilingual detection
-* Image-based phishing detection (CV integration)
-* Email client integration (Gmail / Outlook APIs)
-* Docker + cloud deployment
+Performance Notes
+DistilBERT is used instead of BERT for faster inference and reduced memory usage.
+The ensemble approach improves robustness across diverse phishing patterns.
+Threshold tuning is applied to balance precision and recall effectively.
+The system is optimized for low-latency real-time predictions.
 
 ---
 
-## 💼 Use Cases
-
-* Enterprise email security
-* AI-powered cybersecurity tools
-* Security operations & threat analysis
-* Academic and research applications
-
----
-
-## 👨‍💻 Author
-
-**Prem Dev**
-AI Systems | Machine Learning 
+Key Engineering Decisions
+DistilBERT was chosen over BERT to achieve faster inference with minimal accuracy loss.
+Combining BiLSTM with Transformers allows capturing both sequential and contextual features.
+Weighted ensemble reduces model bias and improves overall detection performance.
+Stateless architecture simplifies deployment and scaling in production environments.
 
 ---
 
-## ⭐ Support
+Key Highlights
+End-to-end AI pipeline from preprocessing to inference
+Real-time and batch processing capabilities
+Production-oriented system design
+Lightweight and scalable architecture
+Suitable for real-world deployment
 
-If you find this useful, give it a ⭐ on GitHub!
+---
+
+Future Improvements
+Integration of LLM-based reasoning agents
+Support for multilingual phishing detection
+Incorporation of computer vision for image-based phishing
+Integration with email clients such as Gmail and Outlook
+Containerization and cloud deployment using Docker
+
+---
+
+Use Cases
+Enterprise email security systems
+AI-powered cybersecurity tools
+Threat detection and security operations
+Academic and research applications
+
+---
+
+Author
+Prem Dev
+AI Systems | C++ | Machine Learning | Low-Latency Systems
+
+---
+
+Support
+If you find this project useful, consider giving it a star on GitHub.
