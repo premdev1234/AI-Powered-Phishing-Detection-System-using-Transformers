@@ -1,0 +1,205 @@
+# 🚀 AI-Powered Phishing Detection System using Transformers
+
+## 🔍 Overview
+
+A **production-ready AI system** for detecting phishing emails using **deep learning and transformer-based NLP models**.
+
+This system integrates:
+
+* **BiLSTM (GloVe + Word2Vec embeddings)**
+* **DistilBERT Transformer**
+* **Weighted Ensemble Learning**
+
+to deliver **high accuracy, robustness, and real-time inference**.
+
+👉 Built with a focus on **real-world deployment, security applications, and scalable AI systems**
+
+---
+
+## 🎯 Problem Statement
+
+Traditional email filters fail against:
+
+* Obfuscated phishing content
+* Context-aware attacks
+* Zero-day threats
+
+This system solves it using **context-aware AI models** that understand **semantic + linguistic patterns**, not just keywords.
+
+---
+
+## 🧠 Core Features
+
+* Transformer-based NLP (**DistilBERT**)
+* BiLSTM with **Word2Vec & GloVe embeddings**
+* Ensemble learning for improved performance
+* Real-time phishing detection
+* Batch email analysis (CSV support)
+* Web-based interface (Flask)
+* Threshold tuning (precision vs recall control)
+* Stateless architecture (no database dependency)
+
+---
+
+## 🏗️ System Architecture
+
+```
+Input Email
+   ↓
+Preprocessing (cleaning, masking, tokenization)
+   ↓
+Model Layer:
+   ├── GloVe BiLSTM
+   ├── Word2Vec BiLSTM
+   └── DistilBERT
+   ↓
+Weighted Ensemble
+   ↓
+Final Prediction (Phishing / Legitimate)
+```
+
+---
+
+## ⚙️ Tech Stack
+
+* **Language:** Python
+* **Deep Learning:** PyTorch, Hugging Face Transformers
+* **NLP:** NLTK, Gensim
+* **Backend:** Flask
+* **Frontend:** HTML, CSS, JavaScript
+* **ML Tools:** Scikit-learn, Pandas, NumPy
+
+---
+
+## 📊 Model Details
+
+| Model           | Role                            |
+| --------------- | ------------------------------- |
+| GloVe BiLSTM    | Captures lexical patterns       |
+| Word2Vec BiLSTM | Learns dataset-specific context |
+| DistilBERT      | Deep contextual understanding   |
+
+### Ensemble Formula
+
+```
+P_final = 0.2 * P_glove + 0.3 * P_w2v + 0.5 * P_distilbert
+```
+
+👉 Improves generalization and reduces false negatives
+
+---
+
+## 📈 Evaluation Metrics
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* ROC-AUC
+* Confusion Matrix
+
+👉 Focus: **minimizing false negatives (critical for security systems)**
+
+---
+
+## ⚙️ Installation
+
+```bash
+git clone https://github.com/premdev1234/AI-Powered-Phishing-Detection-System-using-Transformers.git
+cd AI-Powered-Phishing-Detection-System-using-Transformers
+
+pip install -r requirements.txt
+```
+
+---
+
+## ▶️ Run the Project
+
+```bash
+python run.py
+```
+
+Open in browser:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 📂 Project Structure
+
+```
+.
+├── app.py
+├── backend.py
+├── evaluation_model.py
+├── run.py
+├── frontend.html
+├── test_csv_data.csv
+├── requirements.txt
+├── render.yaml
+└── README.md
+```
+
+👉 Note: Current structure is **flat for simplicity**, can be modularized into backend/frontend later.
+
+---
+
+## ⚠️ Model Files
+
+Large model files are not included due to GitHub limits.
+
+👉 Download from:
+
+```
+(Add your Google Drive / HuggingFace link here)
+```
+
+Place them in:
+
+```
+project_root/
+```
+
+---
+
+## 🚀 Key Highlights
+
+* End-to-end AI pipeline (data → model → inference)
+* Real-time + batch processing support
+* Ensemble learning for robustness
+* Production-oriented design
+* Lightweight and deployment-ready
+
+---
+
+## 🔮 Future Improvements
+
+* LLM-based phishing reasoning agents
+* Multilingual detection
+* Image-based phishing detection (CV integration)
+* Email client integration (Gmail / Outlook APIs)
+* Docker + cloud deployment
+
+---
+
+## 💼 Use Cases
+
+* Enterprise email security
+* AI-powered cybersecurity tools
+* Security operations & threat analysis
+* Academic and research applications
+
+---
+
+## 👨‍💻 Author
+
+**Prem Dev**
+AI Systems | Machine Learning 
+
+---
+
+## ⭐ Support
+
+If you find this useful, give it a ⭐ on GitHub!
